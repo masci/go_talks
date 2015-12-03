@@ -1,0 +1,366 @@
+Introduzione a Go
+GDG Perugia
+
+Massimiliano Pippi
+mpippi@gmail.com
+http://dev.pippi.im
+@maxpippi
+
+* Hello, World!
+
+.play hello.go
+
+* Un po' di storia
+
+- 2007: Robert Griesemer, Ken Thompson e Rob Pike fanno partire il progetto
+- 2008: Design quasi completo, runtime e compilatore funzionanti
+- 2009: Prima release
+- 2015: Go 1.5, la prima versione completamente implementata in Go
+
+* Perché Go
+
+Nessun nuovo linguaggio di sistema dai tempi del C
+
+Nel frattempo:
+
+- la quantità di librerie e sowftware disponibile è esplosa, le dipendenze vanno gestite
+- il networking è parte integrante della Computer Science
+- modello client/server sempre più diffuso
+- CPU multi-core onnipresenti
+- Architetture distribuite, cloud, clusters, etc...
+
+(Provate a risolvere uno qualsiasi dei problemi sopra con un linguaggio di sistema come C).
+
+Tradizionalmente i linguaggi hanno teso ad aggiungere feature per risolvere i problemi, Go fa l'opposto.
+
+* Cos'è Go
+
+Caratteristiche tecniche:
+
+- Open Source.
+- Staticamente tipato.
+- Object oriented (una specie).
+- Compilato.
+
+Obiettivi:
+- L'efficienza di un linguaggio staticamente tipato insieme alla facilità d'uso di un linguaggio dinamico.
+- Sicurezza: Go è type-safe e memory-safe.
+- Nato con un proprio paradigma di programmazione concorrente.
+- Garbage collector ad alte prestazioni.
+- Velocità di compilazione.
+- Semplicità (solo 25 keywords).
+
+* Prima di cominciare
+
+Per provare ad eseguire semplice codice Go, utilizzate il [[https://play.golang.org/][Playground]].
+
+.iframe https://play.golang.org/ 400 800
+
+* Le Basi
+
+- tipi primitivi
+
+    int, uint, int8, uint8, (16, 32, 64)
+    bool, string
+    float32, float64
+    complex64, complex128
+
+- structs
+
+    struct {
+        Name string
+        Age  int
+    }
+
+- slices and arrays
+
+    []int, [3]string, []struct{ Name string }
+
+- maps
+
+    map[string]int
+
+* Le Basi (continued)
+
+- pointers
+
+    *int, *Person
+
+- functions
+
+    func(int, int) int
+
+- channels
+
+    chan bool
+
+- interfaces
+
+    interface {
+        Start()
+        Stop()
+    }
+
+* Dichiarare un tipo
+
+    type [name] [specification]
+
+`Person` is a `struct` type.
+
+    type Person struct {
+        name string
+        age  int
+    }
+
+`Celsius` is a `float64` type.
+
+    type Celsius float64
+
+* Funzioni
+
+    func [name] ([params]) [return value]
+    func [name] ([params]) ([return values])
+
+Esempio:
+
+    func sum(a int, b int) int {
+        return a + b
+    }
+
+Una funzione può tornare più valori:
+
+    func divMod(a, b int) (int, int) {
+        return a / b, a % b
+    }
+
+Possiamo dare un nome ai valori di ritorno:
+
+    func divMod(den, div int) (quo, rem int) {
+        return den / div, den % div
+    }
+
+Le funzioni sono first-class values:
+    var delta int
+    return func(x int) int { return x + delta }
+
+* Variabili
+
+Dichiarazione per esteso:
+
+    var text string = "hello"
+
+Il tipo può essere inferito dal compilatore:
+
+    var text = "hello"
+
+Ancora più sintetico (all'interno di funzioni):
+
+    text := "hello"
+
+Esempio:
+
+    a := 0                      // int
+    b := true                   // boolean
+    f := 1.0                    // float64
+    p := Person{"Rob", "Pike"}  // Person
+
+* Nessuna conversione implicita
+
+Esempio, dati i tipi:
+
+    type Celsius float64
+    type Fahrenheit float64
+
+E le variabili:
+
+    var freezing Fahrenheit = 32
+    var boiling Celsius = 100
+
+Provate se questo compila:
+
+    sauna := (freezing + boiling) / 2
+
+* Statements
+
+- Curly braces (C style)
+- Multiple assignments and some other new constructs
+- Many cleanups: mandatory braces, no parentheses for conditionals, implicit break in switches, no semicolons, etc.
+    a, b = b, a                 // swap
+    f, err = os.Open(filename)
+
+    if x < y {
+        return x
+    } else {
+        return y
+    }
+
+    switch day {
+    case Mon:
+        ...
+        // break is implicit
+    case Tue, Wed:
+        ...
+    }
+
+* Pointers
+
+Go ha il tipo puntatore:
+
+    var p *int
+    p = new(int)
+
+ma non esiste aritmetica dei puntatori:
+
+    var p *int = &a[0]
+    var q = p+2            // invalid
+
+Questo per usufruire dell'efficienza dei puntatori senza incorrere in problemi di gestione della memoria.
+
+Esiste `new` ma non `delete`: La memoria viene rilasciata dal garbage collector quando non è più accessibile.
+
+* Slices
+
+    []T  // slice of T
+
+- Descriptor for an underlying array segment
+- May grow and shrink
+- Has length and capacity
+- Assigning a slice copies the descriptor, not the underlying array
+
+Common slice operations:
+
+    len(s)
+    s[i]
+    s[i:j]
+    append(s, x)  // append element x to slice s and return new slice
+
+- Slices play the role of dynamically sized arrays
+- Widely used in Go code
+
+
+* Maps
+
+    map[K]V  // map K -> V
+
+- Map is a language-supplied hash table
+- Maps values of key type K to values of type V
+- Assigning a map copies the map reference, not the map contents
+
+Common map operations:
+
+    make(map[K]V)
+    len(m)
+    m[k]
+    delete(m, k)
+
+- Map iteration order is not specified:
+
+    for key, value := range m {
+        // order of key sequence different each time
+    }
+
+* Object-oriented programming
+
+* What is object-oriented programming?
+
+"Object-oriented programming (OOP) is a programming paradigm using _objects_ – usually instances of a class – consisting of data fields and methods together with their interactions – to design applications and computer programs. Programming techniques may include features such as data abstraction, encapsulation, messaging, modularity, polymorphism, and inheritance. Many modern programming languages now support forms of OOP, at least as an option."
+
+(Wikipedia)
+
+* Se ci pensate, l'OOP richiede poche funzionalità in un linguaggio
+
+Ci serve:
+
+- La nozione di _Object_,
+- Un modo per operare sugli oggetti (_Methods_),
+- Il supporto al polimorfismo (_Interfaces_).
+
+Attenzione: Data abstraction, encapsulation, and modularity are mechanisms
+in their own right, not OOP specific, and a modern language (OO or not)
+should have support for them independently.
+
+* Object-oriented programming in Go
+
+Esistono i metodi ma non le classi
+Esistono le interfacce ma non le gerarchie
+Riuso del codice senza ereditarietà
+
+In particolare:
+
+- Any _value_ can be an _object_
+- Any _type_ can play the role of a _class_
+- _Methods_ can be attached to any _type_
+- _Interfaces_ implement polymorphism.
+
+* Metodi
+
+.play point.go
+
+* Un metodo può essere agganciato ad ogni tipo
+
+.play celsius.go
+
+* Interfacce
+
+    type Stringer interface {
+         String() string
+    }
+
+    type Reader interface {
+         Read(p []byte) (n int, err error)
+    }
+
+    type Writer interface {
+         Write(p []byte) (n int, err error)
+    }
+
+    type Empty interface{}
+
+Un interfaccia è un insieme di metodi. *Solo*metodi,*non*dati*.
+Se un tipo possiede *tutti* i metodi di un'interfaccia, si dice che _implementa_l'_interfaccia_.
+Tutti i tipi implementano l'interfaccia `interface{}`.
+
+* Dynamic dispatch
+
+.play interface.go /START/,/STOP/
+
+A value (here: `corner`, `boiling`) of a type (`Point`, `Celsius`) that implements
+an interface (`Stringer`) can be assigned to a variable (`v`) of that interface type.
+
+* Composition and chaining
+
+Typically, interfaces are small (1-3 methods).
+
+Pervasive use of key interfaces in the standard library make it easy to chain APIs together.
+
+    package io
+    func Copy(dst Writer, src Reader) (int64, error)
+
+The io.Copy function copies by reading from any Reader and writing to any Writer.
+
+Interfaces are often introduced ad-hoc, and after the fact.
+
+There is no explicit hierarchy and thus no need to design one!
+
+* cat
+
+.code cat.go
+
+# An `os.File` implements the `Reader` interface;
+# `os.Stdout` implements the `Writer` interface.
+
+* Tooling
+
+Go vi arriva con una ricca dotazione di strumenti a supporto dello sviluppo, fra cui:
+
+- `fmt`: source code formatting
+- `vet`: static code analysis
+- `test`: test runner and testing framework
+- `cov`: test coverage analysis and report
+- `doc`: documentation extraction and authoring
+- package management
+- race condition detector
+- code generation
+
+e ovviamente `present`, con cui sono fatte queste slide ;-)
+

@@ -1,0 +1,277 @@
+Python - Go One Way
+Golab
+
+Massimiliano Pippi
+mpippi@gmail.com
+http://dev.pippi.im
+@maxpippi
+
+* Personal background
+
+Python, 7+ years experience:
+
+- desktop (PyQt)
+- web (Django)
+- integration (boost.python, SIP, ctypes, cffi, ...)
+
+Go, 6+ months (!) experience:
+
+- Flickr.go - Go client for Flickr API
+
+* Meet the Pythonista
+
+A Python user does not simply use Python to write software:
+
+- Strong sense of Community
+- Common Culture
+
+The average Python user is happy.
+Happiness is what makes you stay.
+
+* Why leaving Pythonland?
+
+My uneducated guess:
+
+- Hype
+- Performance
+- Deployment
+
+* Hype is shifty, never trust the hype.
+
+.image hype.png
+
+Python has currently no hype at all, see the sad state of the red line.
+As a reference, Rust trend is in yellow, pretty good for a no-profit.
+Guess what the light blue line is.
+
+
+Google is pushing hard on the Go propaganda.
+Google is a damn good Hype-machine: people actually use AngularJS.
+
+* Performance
+
+Benchmarking programming languages is tricky: too many _it_depends_.
+
+- CPython VS. Go? Just nope.
+- PyPy VS. Go? Interesting but out of scope.
+
+
+*BUT*
+
+Counting how many requests can handle in a given timeframe a non-blocking server is a little bit easier.
+
+Do you know the statement _concurrency_is_not_parallelism_?
+Well, CPython gives you a slightly conservative reinterpretation:
+
+- _concurrency_shalt_not_be_parallelism_
+
+* Deployment
+
+Typical Python deployment script:
+
+    git pull && pray
+
+A Python devop is usually required to master a superset of the following: 
+virtualenv, pip, pyenv, uwsgi, gunicorn, mod_wsgi, docker, docker-compose, 
+fabric, buildout, pythonz, conda.
+
+Desktop software? Better ship your own interpreter, trust me.
+
+Typical Go deployment script:
+
+    scp your_fucking_static_binary your_server:
+
+Ok, it's a little bit oversimplified but I'm one of those who knows about
+buildout, I'm vulnerable.
+
+* Is it just that? Can it be?
+
+Other languages, tools and environments are better than Python at Hype, Performance and Deployment.
+
+So why Pythonistas are moving mainly to Go?
+
+Another uneducated guess: *Happiness*
+
+Remember from few slides ago? The average Pythonista is happy and wants to keep this state.
+
+How do we keep the grade of happiness for a Python dev?
+
+- Provide a standard library full of stuff
+- Let them write Pythonic code
+
+* The Zen of Python
+
+    >>> import this
+    The Zen of Python, by Tim Peters
+
+    Beautiful is better than ugly.
+    Explicit is better than implicit.
+    Simple is better than complex.
+    Complex is better than complicated.
+    Flat is better than nested.
+    Sparse is better than dense.
+    Readability counts.
+    Special cases aren't special enough to break the rules.
+    Although practicality beats purity.
+    Errors should never pass silently.
+    Unless explicitly silenced.
+    In the face of ambiguity, refuse the temptation to guess.
+    There should be one-- and preferably only one --obvious way to do it.
+    Although that way may not be obvious at first unless you're Dutch.
+    Now is better than never.
+    Although never is often better than *right* now.
+    If the implementation is hard to explain, it's a bad idea.
+    If the implementation is easy to explain, it may be a good idea.
+    Namespaces are one honking great idea -- let's do more of those!
+
+* Beautiful is better than ugly
+
+Very subjective, but you can use only 25 keywords, it won't be that easy to write
+ugly code.
+
+* Explicit is better than implicit
+
+- Statically typed with no implicit conversions
+
+    type Celsius float64
+    type Fahrenheit float64
+
+    var freezing Fahrenheit = 32
+    var boiling Celsius = 100
+
+    sauna := (freezing + boiling) / 2  // NOPE!
+
+- You have to handle errors explicitly, no exception handling
+
+    f, err := os.Open("filename.ext")
+    if err != nil {
+       log.Fatal(err)
+    }
+
+* Simple is better than complex
+
+- Again, only 25 keywords
+- No classes, constructors or destructors
+- Methods are plain functions, no _self_ or _this_
+    func (e Engine) Start() {
+        fmt.Println("Engine started")
+    }
+- No named arguments
+- No generators
+- No iterators
+- No decorators
+- There's no `__magic__`, ever
+
+* Complex is better than complicated
+
+- No inheritance, but you can use structs embedding and get something similar through composition
+- Identifier case sets visibility: not obvious but easy to grasp
+    package geometry
+
+    // point is not exported
+    type point struct {
+        X, Y int;  // X and Y are public
+        name string;
+    }
+- Unicode and UTF-8 handled seamlessly
+
+* Flat is better than nested
+
+- Methods are not nested inside structs
+- Cannot nest packages
+- Multiple files belonging to one package share one name space
+
+* Sparse is better than dense
+
+- No list comprehensions
+- No ternary operator or "a = b if c else d" syntax
+- Extremely difficult to write oneliners
+- Definitely not the weapon of your choice on codegolf
+
+* Readability counts
+
+- Idiomatic code is strongly encouraged, no arguments with strangers on the Internet
+- `gofmt` enforce Go's own PEP8
+- Type inference saves some typing but is not obiquitous
+- In general, the scarce amount of language features keeps the code simple
+
+* Special cases aren't special enough to break the rules
+
+- No support for generics
+- Extremely difficult to add new language features
+
+* Although practicality beats purity
+
+- Remember we said no runtime exceptions? Ok, there's something:
+    panic("the program's gonna die!");
+    err := recover();
+- unsafe package: use it wisely.
+
+* There should be one-- and preferably only one --obvious way to do it
+
+The most deceived aphorism of the Zen.
+
+How do you write concurrent code?
+
+- *Python*: threads, coroutines, generators, tasks, asyncio, futures, twisted, tornado
+- *Go*: two letters and a space character: `go`
+
+* Now is better than never
+
+- You can be productive with Go in one day.
+- Super-fast prototyping
+- Batteries included
+
+* Although never is often better than *right* now.
+
+Some things are highly demanded but won't happen:
+- Data inside interfaces
+- `map` and `filter` builtins
+
+* Namespaces are one honking great idea -- let's do more of those!
+
+- Packages are like modules but with only one obvious way to use them
+- No way you can do: `from`foo`import`bar`
+- Separation of package path ("math/big") from package name (big)
+    package big
+    // ...
+    import "math/big"
+- Impacts on program design, build, testing...
+
+* The citizenship exam
+
+It was easy to come to go (pun intended), what now?
+
+Let's see who stays and who leaves.
+
+* Hype
+
+.image hype-cycle.png _ 700
+
+* Performance
+
+- Go is about 50-100x faster than CPython
+- PyPy is 5-25x faster than CPython
+- Go is about 2-10x faster than PyPy
+
+PyPy can solve most of the performance issues for the average Pythonista without
+the costs to learn a new language and migrate old code.
+
+* Deployment
+
+- Endemic in the Python ecosystem
+- Containers can help to confine Python deployment issues
+- (On the web) Zero downtime updates easier to achieve (see uwsgi)
+
+* Should one go back, then?
+
+Enjoy your stay in the land of Gophers!
+
+- Let's learn Go, it's easy and it's fun
+- Compute costs and benefits before migrating an entire codebase
+- Sometimes rewriting parts of a Python project in Go can be enough to boost performances
+
+Choose the right tool for the job:
+
+- an e-commerce site written in Go is not fast nor scalable, it's a self-inflicted pain
+- trying to stick a websocket server into a Django project can be cause of death
