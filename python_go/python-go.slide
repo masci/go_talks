@@ -1,5 +1,5 @@
 Python - Go One Way
-Golab
+Golab 2015
 
 Massimiliano Pippi
 mpippi@gmail.com
@@ -16,7 +16,7 @@ Python, 7+ years experience:
 
 Go, 6+ months (!) experience:
 
-- Flickr.go - Go client for Flickr API
+- Flickr.go - Go client for Flickr API (https://github.com/masci/flickr)
 
 * Meet the Pythonista
 
@@ -36,11 +36,11 @@ My uneducated guess:
 - Performance
 - Deployment
 
-* Hype is shifty, never trust the hype.
+* Hype
 
 .image hype.png
 
-Python has currently no hype at all, see the sad state of the red line.
+Python has currently no hype at all, see the flat state of the red line.
 As a reference, Rust trend is in yellow, pretty good for a no-profit.
 Guess what the light blue line is.
 
@@ -51,6 +51,8 @@ Google is a damn good Hype-machine: people actually use AngularJS.
 * Performance
 
 Benchmarking programming languages is tricky: too many _it_depends_.
+# for example, if language x encodes a JSON payload in 150ms while C++ does it in 15ms
+# that wouldn't necessary be a problem, benchmarks are relative.
 
 - CPython VS. Go? Just nope.
 - PyPy VS. Go? Interesting but out of scope.
@@ -147,6 +149,7 @@ ugly code.
     if err != nil {
        log.Fatal(err)
     }
+- There's no `__magic__`, ever
 
 * Simple is better than complex
 
@@ -160,7 +163,6 @@ ugly code.
 - No generators
 - No iterators
 - No decorators
-- There's no `__magic__`, ever
 
 * Complex is better than complicated
 
@@ -232,6 +234,7 @@ Some things are highly demanded but won't happen:
 
 - Packages are like modules but with only one obvious way to use them
 - No way you can do: `from`foo`import`bar`
+- ...even if you can do: `from`foo`import`*` (`import`.`"lib/math"`)
 - Separation of package path ("math/big") from package name (big)
     package big
     // ...
@@ -244,7 +247,7 @@ It was easy to come to go (pun intended), what now?
 
 Let's see who stays and who leaves.
 
-* Hype
+* Hype is shifty, never trust the hype
 
 .image hype-cycle.png _ 700
 
@@ -252,7 +255,7 @@ Let's see who stays and who leaves.
 
 - Go is about 50-100x faster than CPython
 - PyPy is 5-25x faster than CPython
-- Go is about 2-10x faster than PyPy
+- Go is about 4-10x faster than PyPy
 
 PyPy can solve most of the performance issues for the average Pythonista without
 the costs to learn a new language and migrate old code.
